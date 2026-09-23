@@ -1933,10 +1933,67 @@
       </div>
 
       <div style="padding:20px 34px 0;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-        <div style="display:flex;align-items:center;gap:8px;border:1px solid #E4E4E7;border-radius:10px;padding:10px 16px;font-size:14px;font-weight:600;cursor:pointer">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#18181B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18l-7 8v6l-4-2v-4z"></path></svg>
-          <span>Filters</span>
+        <div data-keep="1" style="position:relative">
+          <div onClick="{{ onFToggle }}" style="{{ fBtnStyle }}">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18l-7 8v6l-4-2v-4z"></path></svg>
+            <span>Filters</span>
+            <sc-if value="{{ fHasActive }}" hint-placeholder-val="{{ false }}">
+              <span style="min-width:20px;height:20px;border-radius:999px;background:#2563EB;color:#FFFFFF;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 6px">{{ fActiveCount }}</span>
+            </sc-if>
+          </div>
+          <sc-if value="{{ fOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;top:calc(100% + 8px);left:0;width:300px;background:#FFFFFF;border:1px solid #E4E4E7;border-radius:14px;box-shadow:0 16px 40px rgba(16,24,40,.12);padding:8px;z-index:40">
+              <sc-if value="{{ fIsRoot }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;align-items:center;gap:10px;background:#F4F4F5;border-radius:10px;padding:10px 12px">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#52525B" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"></circle><path d="m20 20-4.2-4.2"></path></svg>
+                  <input value="{{ fQ }}" onInput="{{ onFQ }}" placeholder="Filter" style="flex:1;min-width:0;border:none;background:transparent;outline:none;font-size:15px;color:#18181B">
+                </div>
+                <div style="display:flex;flex-direction:column;margin-top:6px">
+                  <sc-for list="{{ fCats }}" as="c" hint-placeholder-count="5">
+                    <div onClick="{{ c.onOpen }}" style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:9px;cursor:pointer;font-size:15px;font-weight:500" style-hover="background:#F4F4F5">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#18181B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="{{ c.icon }}"></path></svg>
+                      <span style="flex:1">{{ c.label }}</span>
+                      <sc-if value="{{ c.hasCount }}" hint-placeholder-val="{{ false }}">
+                        <span style="font-size:12px;font-weight:700;background:#EFF6FF;color:#2563EB;border-radius:999px;padding:2px 8px">{{ c.count }}</span>
+                      </sc-if>
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#A1A1AA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"></path></svg>
+                    </div>
+                  </sc-for>
+                  <sc-if value="{{ fNoCats }}" hint-placeholder-val="{{ false }}">
+                    <div style="padding:12px;font-size:14px;color:#71717A">No filters match</div>
+                  </sc-if>
+                </div>
+              </sc-if>
+              <sc-if value="{{ fIsCat }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;align-items:center;gap:8px;padding:4px 4px 8px;border-bottom:1px solid #F4F4F5">
+                  <div onClick="{{ onFBack }}" style="width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="background:#F4F4F5"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#18181B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"></path></svg></div>
+                  <span style="flex:1;font-size:15px;font-weight:700">{{ fCatTitle }}</span>
+                  <sc-if value="{{ fCatHasSel }}" hint-placeholder-val="{{ false }}">
+                    <span onClick="{{ onFClearCat }}" style="font-size:13px;font-weight:600;color:#2563EB;cursor:pointer;padding:4px 6px">Clear</span>
+                  </sc-if>
+                </div>
+                <div style="display:flex;flex-direction:column;margin-top:6px;max-height:320px;overflow-y:auto">
+                  <sc-for list="{{ fOpts }}" as="o" hint-placeholder-count="4">
+                    <div onClick="{{ o.onToggle }}" style="display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:9px;cursor:pointer" style-hover="background:#F4F4F5">
+                      <span style="{{ o.boxStyle }}"><sc-if value="{{ o.on }}" hint-placeholder-val="{{ false }}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4 4L19 7"></path></svg></sc-if></span>
+                      <span style="flex:1;min-width:0;display:flex"><span style="{{ o.labelStyle }}">{{ o.label }}</span></span>
+                      <span style="font-size:13px;color:#A1A1AA;font-weight:600">{{ o.count }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </sc-if>
         </div>
+        <sc-for list="{{ fChips }}" as="ch" hint-placeholder-count="0">
+          <div data-keep="1" onClick="{{ ch.onOpen }}" style="display:flex;align-items:center;gap:8px;background:#EFF6FF;border:1px solid #DBEAFE;color:#1D4ED8;border-radius:10px;padding:9px 10px 9px 14px;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap">
+            <span>{{ ch.label }}</span>
+            <span onClick="{{ ch.onClear }}" style="width:20px;height:20px;border-radius:999px;display:flex;align-items:center;justify-content:center" style-hover="background:#DBEAFE"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg></span>
+          </div>
+        </sc-for>
+        <sc-if value="{{ fHasActive }}" hint-placeholder-val="{{ false }}">
+          <span onClick="{{ onFClearAll }}" style="font-size:14px;font-weight:600;color:#71717A;cursor:pointer;padding:0 4px">Clear all</span>
+        </sc-if>
         
         <div onClick="{{ onToggleSort }}" style="{{ icpSortStyle }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16"></path><path d="m3 8 4-4 4 4"></path><path d="M17 20V4"></path><path d="m13 16 4 4 4-4"></path></svg><span>{{ icpSortLabel }}</span></div>
         <div style="flex:1"></div>
@@ -1976,6 +2033,7 @@
                 <div style="display:flex;align-items:center;gap:10px">
                   <div style="{{ c.avatarStyle }}">{{ c.initials }}</div>
                   <span style="flex:1;min-width:0;font-size:15px;font-weight:700">{{ c.name }}</span>
+                  <span title="{{ c.gradeTitle }}" style="{{ c.gradeStyle }}">{{ c.grade }}</span>
                 </div>
                 <div style="display:flex;align-items:center;gap:7px;margin-top:12px;font-size:14px;color:#71717A">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A1A1AA" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"></path><circle cx="12" cy="10" r="2.4"></circle></svg>
@@ -2065,10 +2123,10 @@
 
           <div style="background:#FFFFFF;border:1px solid #E4E4E7;border-radius:16px;padding:26px 28px;margin-top:20px">
             <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap">
-              {{ profCritRing }}
+              <div title="{{ profGradeTitle }}" style="{{ profGradeStyle }}">{{ profGrade }}</div>
               <div style="flex:1;min-width:220px">
                 <div style="font-size:20px;font-weight:700">{{ profCritCountLabel }}</div>
-                <div style="font-size:15px;line-height:1.55;color:#52525B;margin-top:6px;text-wrap:pretty">{{ profCriteriaSub }}</div>
+                
               </div>
               <div style="border:1px solid #E4E4E7;font-size:14px;font-weight:600;border-radius:10px;padding:10px 16px;cursor:pointer">Recheck</div>
             </div>
@@ -2090,10 +2148,7 @@
                 </div>
               </sc-for>
             </div>
-            <div style="display:flex;gap:12px;background:#EFF6FF;border:1px solid #DBEAFE;border-radius:12px;padding:16px 18px;margin-top:18px">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="flex:0 0 auto;margin-top:1px"><path d="M12 3.5 13.7 9l5.5 1.7-5.5 1.7L12 18l-1.7-5.6L4.8 10.7 10.3 9z"></path></svg>
-              <div style="font-size:15px;line-height:1.6;color:#27272A">{{ profWhy }}</div>
-            </div>
+            
           </div>
 
           <sc-if value="{{ profHasCustomQs }}" hint-placeholder-val="{{ false }}">
@@ -2621,7 +2676,7 @@ class Component extends DCLogic {
     this._close = (e) => {
       if (e.target.closest && e.target.closest('[data-keep]')) return;
       if (this.state.ask && this.state.ask.open && !this.state.ask.busy) this.setState(s2 => ({ ask: Object.assign({}, s2.ask, { open: false }) }));
-      this.setState({ open: null, showSuggest: false, menu: null, wReviewOpen: false, poolJobOpen: false, jobMenuOpen: false });
+      this.setState({ open: null, showSuggest: false, menu: null, wReviewOpen: false, poolJobOpen: false, jobMenuOpen: false, fOpen: false });
       const w = this.state.w;
       if (w && (w.teamOpen || w.currOpen || w.periodOpen || w.calcOpen)) this.wset({ teamOpen: false, currOpen: false, periodOpen: false, calcOpen: false });
     };
@@ -3355,6 +3410,21 @@ class Component extends DCLogic {
     const locFull = w.location + ', Germany' + (w.workplace ? ' (' + w.workplace.toLowerCase() + ')' : '');
     const cards = st.cards;
     const totals = ITIERS.map(t => cards.filter(c => c.importance === t[2]).length);
+    const gradeOf = c => {
+      const W = { must: 3, should: 2, nice: 1 };
+      let tot = 0, got = 0, mustMiss = false;
+      ITIERS.forEach((t, ti) => {
+        const total = totals[ti] || 0;
+        const missed = Math.min(total, (c.misses || []).filter(m => m[1] === t[0]).length);
+        tot += total * W[t[0]]; got += (total - missed) * W[t[0]];
+        if (t[0] === 'must' && missed) mustMiss = true;
+      });
+      const p = tot ? got / tot : 1;
+      let g = p >= 1 ? 'A+' : p >= .9 ? 'A' : p >= .75 ? 'B' : p >= .6 ? 'C' : p >= .45 ? 'D' : 'F';
+      if (mustMiss && ['A+', 'A', 'B'].indexOf(g) >= 0) g = 'C';
+      const C = { 'A+': ['#DCFCE7', '#15803D'], 'A': ['#ECFCCB', '#4D7C0F'], 'B': ['#EFF6FF', '#1D4ED8'], 'C': ['#FEF3C7', '#B45309'], 'D': ['#FFEDD5', '#C2410C'], 'F': ['#FEE2E2', '#DC2626'] }[g];
+      return { g, bg: C[0], fg: C[1], title: 'Criteria score: ' + Math.round(p * 100) + '% of weighted criteria met' + (mustMiss ? ' \u00b7 misses a must-have' : '') };
+    };
     const allCand = [];
     Object.keys(ICARDS).forEach(k => ICARDS[k].forEach(c => allCand.push(c)));
 
@@ -3494,6 +3564,32 @@ class Component extends DCLogic {
     const failCache = {};
     const failedOf = c => failCache[c.name] || (failCache[c.name] = failedFor(c));
     const failed = failedFor(cand);
+    const FCATS = [
+      { key: 'score', label: 'Score', icon: 'M5 18v-4M10 18v-8M15 18V7M20 18V4' },
+      { key: 'criteria', label: 'Criteria met', icon: 'M5 12.5l4 4L19 7' },
+      { key: 'must', label: 'Must-haves', icon: 'M12 3.5l2.5 5.2 5.7.8-4.1 4 1 5.7L12 16.5l-5.1 2.7 1-5.7-4.1-4 5.7-.8z' },
+      { key: 'location', label: 'Location', icon: 'M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11zM12 7.6a2.4 2.4 0 1 0 0 4.8 2.4 2.4 0 0 0 0-4.8' },
+      { key: 'days', label: 'Days in stage', icon: 'M4 6h16v14H4zM4 10h16M8 4v3M16 4v3' }
+    ];
+    const GCOL = { 'A+': ['#DCFCE7', '#15803D'], 'A': ['#ECFCCB', '#4D7C0F'], 'B': ['#EFF6FF', '#1D4ED8'], 'C': ['#FEF3C7', '#B45309'], 'D': ['#FFEDD5', '#C2410C'], 'F': ['#FEE2E2', '#DC2626'] };
+    const daysOf = c => { const m = (c.stage || '').match(/\d+/); return m ? parseInt(m[0], 10) : (c.applied || 0); };
+    const fOptsFor = k => k === 'score' ? ['A+', 'A', 'B', 'C', 'D', 'F'] : k === 'location' ? Array.from(new Set(allCand.map(c => c.location))).sort() : k === 'must' ? ['All must-haves met', 'Missing a must-have'] : k === 'days' ? ['0\u20132 days', '3\u20136 days', '7+ days'] : cards.map(c => c.name);
+    const fMatch = (k, c, v) => {
+      if (k === 'score') return gradeOf(c).g === v;
+      if (k === 'location') return c.location === v;
+      if (k === 'must') return ((c.misses || []).some(m => m[1] === 'must') ? 'Missing a must-have' : 'All must-haves met') === v;
+      if (k === 'days') { const d = daysOf(c); return (d <= 2 ? '0\u20132 days' : d <= 6 ? '3\u20136 days' : '7+ days') === v; }
+      const i = cards.findIndex(x => x.name === v); return i < 0 || failedOf(c)[i] === undefined;
+    };
+    const fSel = st.fSel || {};
+    const fPass = c => Object.keys(fSel).every(k => { const vs = fSel[k] || []; if (!vs.length) return true; return k === 'criteria' ? vs.every(v => fMatch(k, c, v)) : vs.some(v => fMatch(k, c, v)); });
+    columns = columns.map(col => { const cs = col.cards.filter(fPass); return Object.assign({}, col, { cards: cs, count: cs.length }); });
+    const fSetSel = (k, arr) => this.setState(s2 => ({ fSel: Object.assign({}, s2.fSel || {}, { [k]: arr }) }));
+    const fTitleOf = k => (FCATS.filter(c => c.key === k)[0] || {}).label || '';
+    const fActiveKeys = Object.keys(fSel).filter(k => (fSel[k] || []).length);
+    const fActiveN = fActiveKeys.reduce((n, k) => n + fSel[k].length, 0);
+    const fQ = (st.fQ || '').trim().toLowerCase();
+    const fCatList = FCATS.filter(c => !fQ || c.label.toLowerCase().indexOf(fQ) >= 0);
     const matchRows = cards.slice(0, 6).map((c, i) => {
       const ok = failed[i] === undefined;
       const ev = ok ? evid(c) : '';
@@ -3567,6 +3663,30 @@ class Component extends DCLogic {
       icpJobTabs: [['Applications', true], ['Store', false], ['Postings', false]].map(t => ({
         label: t[0], style: 'font-size:15px;font-weight:' + (t[1] ? 700 : 500) + ';color:' + (t[1] ? '#2563EB' : '#71717A') + ';padding:0 2px 14px;border-bottom:2px solid ' + (t[1] ? '#2563EB' : 'transparent') + ';cursor:pointer'
       })),
+      fOpen: !!st.fOpen, fIsRoot: !st.fCat, fIsCat: !!st.fCat,
+      fQ: st.fQ || '', onFQ: e => this.setState({ fQ: e.target.value }),
+      onFToggle: () => this.setState({ fOpen: !st.fOpen, fCat: null, fQ: '' }),
+      fBtnStyle: 'display:flex;align-items:center;gap:8px;border:1px solid ' + (st.fOpen || fActiveN ? '#2563EB' : '#E4E4E7') + ';background:' + (st.fOpen ? '#EFF6FF' : '#FFFFFF') + ';color:#18181B;border-radius:10px;padding:10px 16px;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap',
+      fHasActive: fActiveN > 0, fActiveCount: fActiveN,
+      fCats: fCatList.map(c => { const n = (fSel[c.key] || []).length; return { label: c.label, icon: c.icon, hasCount: n > 0, count: n, onOpen: () => this.setState({ fCat: c.key }) }; }),
+      fNoCats: !fCatList.length,
+      fCatTitle: fTitleOf(st.fCat), onFBack: () => this.setState({ fCat: null }),
+      fCatHasSel: !!(st.fCat && (fSel[st.fCat] || []).length), onFClearCat: () => fSetSel(st.fCat, []),
+      fOpts: st.fCat ? fOptsFor(st.fCat).map(v => {
+        const k = st.fCat, cur = fSel[k] || [], on = cur.indexOf(v) >= 0, g = GCOL[v];
+        return {
+          label: v, on: on, count: allCand.filter(c => fMatch(k, c, v)).length,
+          onToggle: () => fSetSel(k, on ? cur.filter(x => x !== v) : cur.concat([v])),
+          boxStyle: 'width:18px;height:18px;border-radius:5px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;border:1.5px solid ' + (on ? '#2563EB' : '#D4D4D8') + ';background:' + (on ? '#2563EB' : '#FFFFFF'),
+          labelStyle: k === 'score' ? 'font-size:13px;font-weight:800;border-radius:7px;padding:3px 9px;background:' + g[0] + ';color:' + g[1] : 'font-size:15px;font-weight:500;color:#18181B;overflow:hidden;text-overflow:ellipsis;white-space:nowrap'
+        };
+      }) : [],
+      fChips: fActiveKeys.map(k => { const vs = fSel[k]; return {
+        label: fTitleOf(k) + ': ' + (vs.length > 2 ? vs.slice(0, 2).join(', ') + ' +' + (vs.length - 2) : vs.join(', ')),
+        onOpen: () => this.setState({ fOpen: true, fCat: k, fQ: '' }),
+        onClear: e => { e.stopPropagation(); fSetSel(k, []); }
+      }; }),
+      onFClearAll: () => this.setState({ fSel: {} }),
       icpFilterLabel: st.icpFilter ? 'Criteria match ≥ 70%' : 'Criteria match: off',
       icpFilterStyle: 'display:flex;align-items:center;gap:8px;border:1px solid ' + (st.icpFilter ? '#2563EB' : '#E4E4E7') + ';background:' + (st.icpFilter ? '#2563EB' : '#FFFFFF') + ';color:' + (st.icpFilter ? '#FFFFFF' : '#18181B') + ';border-radius:10px;padding:10px 16px;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap',
       onToggleIcp: () => this.setState({ icpFilter: !st.icpFilter }),
@@ -3590,6 +3710,7 @@ class Component extends DCLogic {
           onDragEnd: () => this.setState({ dragging: null, over: null }),
           cardStyle: 'background:#FFFFFF;border:1px solid #E4E4E7;border-radius:13px;padding:16px;cursor:grab;box-shadow:0 1px 2px rgba(0,0,0,.04);opacity:' + (st.dragging === c.name ? .45 : 1),
           avatarStyle: 'width:30px;height:30px;border-radius:999px;background:' + c.color + ';color:#FFFFFF;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:0 0 auto',
+          ...(() => { const G = gradeOf(c); return { grade: G.g, gradeTitle: G.title, gradeStyle: 'min-width:34px;height:28px;padding:0 8px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;letter-spacing:-.2px;flex:0 0 auto;background:' + G.bg + ';color:' + G.fg }; })(),
           tiers: ITIERS.map((t, ti) => {
             const total = totals[ti];
             if (!total) return null;
@@ -3633,6 +3754,8 @@ class Component extends DCLogic {
         label: t, style: 'font-size:15px;font-weight:' + (i === 0 ? 700 : 500) + ';white-space:nowrap;color:' + (i === 0 ? '#18181B' : '#71717A') + ';background:' + (i === 0 ? '#FFFFFF' : 'transparent') + ';border:1px solid ' + (i === 0 ? '#E4E4E7' : 'transparent') + ';border-radius:10px;padding:9px 15px;cursor:pointer'
       })),
       profCritRing: critRing,
+      profGrade: gradeOf(cand).g, profGradeTitle: gradeOf(cand).title,
+      profGradeStyle: 'width:64px;height:64px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;letter-spacing:-.6px;flex:0 0 auto;background:' + gradeOf(cand).bg + ';color:' + gradeOf(cand).fg,
       profCritCountLabel: critFulfilled + '/' + critTotal + ' job criteria fulfilled',
       profCriteriaSub: 'Measured against the ' + critTotal + ' criteria you approved for this job. Evidence is pulled from the CV and screening answers — nothing here rejects a candidate on its own.',
       profMatchRows: matchRows,
